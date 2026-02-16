@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧧 Pick 1 of 5 Ang Bao · CNY 2026</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(160deg, #a8201a 0%, #b6452c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Microsoft YaHei', '华文楷体', 'KaiTi', sans-serif;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 880px;
+            width: 100%;
+            background: #fef7e9;
+            border-radius: 70px 70px 50px 50px;
+            box-shadow: 0 30px 40px rgba(0,0,0,0.4), 0 0 0 6px #f1c40f, 0 0 0 12px #b33126;
+            padding: 32px 24px 40px;
+            text-align: center;
+        }
+
+        .header-chinese {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #b5470b;
+            text-shadow: 3px 3px 0 #f3cd81, 5px 5px 0 rgba(175, 60, 30, 0.3);
+            letter-spacing: 8px;
+            line-height: 1.2;
+        }
+
+        .subhead {
+            font-size: 1.4rem;
+            color: #b33e2b;
+            background: #faeac9;
+            display: inline-block;
+            padding: 0.3rem 2rem;
+            border-radius: 50px;
+            margin: 16px 0 28px;
+            border: 2px solid #f0b351;
+            font-weight: 600;
+        }
+
+        /* the five ang bao grid */
+        .angbao-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            margin: 30px 0 20px;
+        }
+
+        .packet {
+            flex: 1 1 140px;
+            max-width: 160px;
+            min-width: 130px;
+            background: #e02b2b;
+            background: linear-gradient(145deg, #d42424, #b11d1d);
+            border-radius: 40px 40px 25px 25px;
+            border: 3px solid #fad160;
+            box-shadow: 0 8px 0 #6f1e1e, 0 12px 20px rgba(0,0,0,0.3);
+            padding: 22px 8px 28px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fdebb3;
+            position: relative;
+        }
+
+        .packet::before {
+            content: "🧧";
+            font-size: 2.8rem;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 0 4px 3px #402010;
+        }
+
+        .packet .packet-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: #f5b41b;
+            color: #631e0e;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            border: 3px solid #ffea8a;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            box-shadow: inset 0 -3px 0 #b0701a;
+        }
+
+        .packet .fold {
+            font-size: 1.1rem;
+            background: #fde9b0;
+            color: #962020;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: 1px solid gold;
+            width: 90%;
+            text-align: center;
+        }
+
+        /* disabled / opened state */
+        .packet.opened {
+            opacity: 0.9;
+            cursor: default;
+            background: linear-gradient(145deg, #b37b5b, #9e5d3a);
+            border-color: #efc283;
+            box-shadow: 0 4px 0 #5e3e2e, 0 8px 12px rgba(0,0,0,0.2);
+            transform: translateY(4px);
+            pointer-events: none;      /* cannot click again */
+            filter: grayscale(0.3);
+        }
+
+        .packet.opened::before {
+            content: "🎉";
+            font-size: 2.8rem;
+        }
+
+        .packet.opened .fold {
+            background: #ecd79b;
+            color: #3d2b1b;
+            border: 2px solid #f5bc70;
+            font-weight: 700;
+            white-space: normal;
+            word-break: break-word;
+            font-size: 1rem;
+        }
+
+        /* unopened hover */
+        .packet:not(.opened):hover {
+            transform: translateY(-6px);
+            background: linear-gradient(145deg, #ec4242, #c32929);
+            box-shadow: 0 10px 0 #6f1e1e, 0 16px 24px rgba(0,0,0,0.3);
+        }
+
+        .result-area {
+            margin: 30px 0 10px;
+            background: #fbe6bc;
+            border-radius: 60px;
+            padding: 20px 16px;
+            border: 3px solid #e5942b;
+        }
+
+        .big-reveal {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #a52f1b;
+            background: #fffbee;
+            display: inline-block;
+            padding: 0.4rem 1.8rem;
+            border-radius: 70px;
+            border: 4px solid #fac75a;
+            margin-bottom: 12px;
+            word-break: break-word;
+            max-width: 100%;
+            box-shadow: 0 5px 0 #b47d2e;
+        }
+
+        .reveal-note {
+            font-size: 1.5rem;
+            color: #3f280e;
+            background: #f7d99e;
+            display: inline-block;
+            padding: 0.2rem 2rem;
+            border-radius: 40px;
+        }
+
+        .reset-btn {
+            background: #c3783b;
+            border: none;
+            border-bottom: 5px solid #794f1b;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 0.8rem 2.2rem;
+            border-radius: 60px;
+            color: #ffefc0;
+            cursor: pointer;
+            transition: 0.06s linear;
+            margin-top: 24px;
+            box-shadow: 0 8px 14px #301a0a60;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .reset-btn:active {
+            transform: translateY(5px);
+            border-bottom-width: 2px;
+        }
+
+        .reset-btn:hover {
+            background: #dc8b4a;
+            color: white;
+        }
+
+        .footer-pool {
+            margin-top: 30px;
+            background: #cf5a36;
+            color: #faf0c0;
+            padding: 12px 18px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            border: 2px solid #ffd966;
+            word-break: break-word;
+        }
+
+        .footer-pool span {
+            background: #862c1e;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            margin: 0 3px;
+            display: inline-block;
+        }
+
+        .warning-msg {
+            font-size: 1.3rem;
+            color: #e6d415;
+            background: #9f301f;
+            padding: 6px 10px;
+            border-radius: 50px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-chinese">🧧 五福临门</div>
+        <div class="subhead">🐉 pick ONE red packet · 只选一个</div>
+
+        <!-- five ang bao packets -->
+        <div class="angbao-grid" id="angbaoContainer">
+            <div class="packet" data-index="0">
+                <div class="packet-number">①</div>
+                <div class="fold">✨ 福 ✨</div>
+            </div>
+            <div class="packet" data-index="1">
+                <div class="packet-number">②</div>
+                <div class="fold">✨ 禄 ✨</div>
+            </div>
+            <div class="packet" data-index="2">
+                <div class="packet-number">③</div>
+                <div class="fold">✨ 寿 ✨</div>
+            </div>
+            <div class="packet" data-index="3">
+                <div class="packet-number">④</div>
+                <div class="fold">✨ 喜 ✨</div>
+            </div>
+            <div class="packet" data-index="4">
+                <div class="packet-number">⑤</div>
+                <div class="fold">✨ 财 ✨</div>
+            </div>
+        </div>
+
+        <!-- reveal area -->
+        <div class="result-area" id="resultArea">
+            <div class="big-reveal" id="selectedPrize">—</div>
+            <div class="reveal-note" id="selectedNote">🧧 click any packet above</div>
+        </div>
+
+        <!-- reset button -->
+        <button class="reset-btn" id="resetBtn">🔄 再来一次 · try again</button>
+
+        <!-- list of all possible surprises (exactly as requested) -->
+       
+        <div class="warning-msg" id="warningMsg"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- the six mystical values (exactly as you requested) -----
+            const PRIZES = [
+                " bn nh tver ss",
+                "100riel",
+                "Chop nik ke nv",
+                "0.13$",
+                "try again next year",
+                "0.02$"
+            ];
+
+            // fun notes for each prize (for extra flavour)
+            const NOTE_MAP = {
+                " bn nh tver ss": "🈹 very limited edition",
+                "100riel": "jay eos ot!",
+                "Chop nik ke nv": "🪙 Chnam tmey hz lmom chop nik ke hz!!",
+                "0.13$": "🍀 tuk bong moto",
+                "try again next year": "Men kon chin teh jab bn ah ng",
+                "0.02$": "💫 see luy jren jg rompherp pin na tv"
+            };
+
+            // We'll assign 5 packets -> pick 5 random prizes from PRIZES (with possible duplicate because we have 6 items for 5 packets)
+            // But we'll ensure it's random each reset.
+            let currentPrizes = [];         // length 5, holds prize strings
+            let openedIndex = null;          // which packet was opened (0-4), null if none opened
+            let gameActive = true;            // true until a packet opened
+
+            // DOM elements
+            const packets = document.querySelectorAll('.packet');
+            const container = document.getElementById('angbaoContainer');
+            const selectedPrizeDiv = document.getElementById('selectedPrize');
+            const selectedNoteDiv = document.getElementById('selectedNote');
+            const resetBtn = document.getElementById('resetBtn');
+            const warningMsg = document.getElementById('warningMsg');
+
+            // helper: pick 5 random prizes from the 6 (WITH replacement? you said "make 5 ang pav to choose and can choose only one"
+            // we have 5 packets and 6 possible values, so one value will be omitted each round. or could duplicate? we want it fun: 
+            // For true randomness we pick 5 items WITH replacement possible (since one value might repeat) but that makes exactly 5 prizes, some may duplicate.
+            // but to match "5 ang pav" and "price have 5 is bn nh tver ss, 100riel, 0.01$, 0.13$, try again next year, 0.02$" -> that's six. 
+            // So we'll pick 5 out of the 6 *randomly without replacement* -> one missing each round. That feels more like a lucky dip.
+            // I'll do without replacement: each reset, randomly remove one prize and shuffle the remaining five into the packets.
+            function generateFivePrizes() {
+                // create a copy of PRIZES
+                let pool = [...PRIZES];
+                // randomly remove one item (so we have 5 distinct prizes)
+                const removeIndex = Math.floor(Math.random() * pool.length);
+                pool.splice(removeIndex, 1);  // remove one -> now length 5
+                // shuffle the remaining five so they are randomly assigned to packets
+                for (let i = pool.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [pool[i], pool[j]] = [pool[j], pool[i]];
+                }
+                return pool;  // array of 5 strings
+            }
+
+            // reset everything: generate new prizes, close all packets, clear reveal
+            function resetGame() {
+                currentPrizes = generateFivePrizes();
+                openedIndex = null;
+                gameActive = true;
+
+                // reset all packets to unopened state, remove opened class
+                packets.forEach(pkt => {
+                    pkt.classList.remove('opened');
+                    // inner fold back to default symbol
+                    const foldDiv = pkt.querySelector('.fold');
+                    if (foldDiv) {
+                        foldDiv.textContent = '✨ 福 ✨'; // generic, but we can make them individual later? we keep generic
+                    }
+                });
+
+                // reset reveal area
+                selectedPrizeDiv.textContent = '—';
+                selectedNoteDiv.textContent = '🧧 click any packet above';
+                warningMsg.textContent = '';
+            }
+
+            // call reset for initial setup
+            resetGame();
+
+            // add click listeners to each packet
+            packets.forEach((pkt, idx) => {
+                pkt.addEventListener('click', function(e) {
+                    // if already opened (class 'opened' exists) or game inactive (already picked) then ignore
+                    if (pkt.classList.contains('opened') || !gameActive) {
+                        if (!gameActive) {
+                            warningMsg.textContent = '🎊 you already opened one! press "再来一次" for new packets.';
+                        }
+                        return;
+                    }
+
+                    // mark this packet as opened
+                    pkt.classList.add('opened');
+                    // reveal the prize inside: currentPrizes[idx]
+                    const prize = currentPrizes[idx];
+                    const foldDiv = pkt.querySelector('.fold');
+                    if (foldDiv) {
+                        foldDiv.textContent = prize;   // show the actual prize on the opened packet
+                    }
+
+                    // update the big reveal area
+                    selectedPrizeDiv.textContent = prize;
+                    selectedNoteDiv.textContent = NOTE_MAP[prize] || '🧧 恭喜发财';
+
+                    // set opened index
+                    openedIndex = idx;
+                    gameActive = false;   // no more picks allowed
+                    warningMsg.textContent = ''; // clear any warning
+                });
+            });
+
+            // reset button
+            resetBtn.addEventListener('click', function() {
+                resetGame();
+            });
+
+        })();
+    </script>
+</body>
+</html>
